@@ -1,0 +1,284 @@
+﻿@model SignUp.Models.User
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .row {
+        background-color: rgba(155, 197, 248, 0.5);
+        width: 600px;
+        border: 1px solid rgb(15, 0, 54);
+        padding: 35px;
+        margin: 10px;
+        align-items: left;
+    }
+
+    body {
+        background-image: url("https://c4.wallpaperflare.com/wallpaper/632/790/513/digital-digital-art-artwork-city-lights-hd-wallpaper-preview.jpg");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100%;
+    }
+
+    span {
+        color: red;
+        font-style: bold;
+    }
+
+    button {
+        color: white;
+        background-color: rgba(244, 0, 0, 0.5);
+    }
+</style>
+<script>
+
+    function validateUserName() {
+        let userCtrl = document.getElementById("userName");
+        if (userCtrl.value == "") {
+            document.getElementById("userError1").innerHTML = "**User Name is mandatory";
+            userCtrl.focus();
+            return false;
+        }
+        else if (userCtrl.value.length > 15) {
+            // alert("characters must not exceed 15");
+            document.getElementById("userError1").innerHTML = "**Username should not exceed 15 characters";
+            userCtrl.focus();
+            return false;
+        }
+        else if (userCtrl.value.length < 6) {
+            //alert("enter more than 6 characters");
+            document.getElementById("userError1").innerHTML = "**Minimum 6  characters required";
+            userCtrl.focus();
+            return false;
+
+        }
+
+
+        else
+            if (userCtrl.value.match(/[A-Z]/g)) {
+                document.getElementById("userError1").innerHTML = "";
+
+            }
+            else {
+                document.getElementById("userError1").innerHTML = "**atleast one letter should be capital";
+                userCtrl.focus();
+                return false
+
+
+
+            }
+    }
+
+
+    function validatePassword() {
+        passCtrl = document.getElementById("password");
+        if (passCtrl.value == "") {
+            document.getElementById("pwd1").innerHTML = "**Password is mandatory";
+            passCtrl.focus();
+            return false;
+        }
+        else if (passCtrl.value.length < 8) {
+            document.getElementById("pwd1").innerHTML = "**Minimum 8 characters required";
+            passCtrl.focus();
+            return false;
+        }
+        else if (passCtrl.value.length > 15) {
+            document.getElementById("pwd1").innerHTML = "**Password should not exceed 15 characters";
+            passCtrl.focus();
+            return false;
+        }
+
+
+       
+        else if (passCtrl.value.match(/[a-z]/g) && passCtrl.value.match(
+                /[A-Z]/g) && passCtrl.value.match(
+                    /[0-9]/g) && passCtrl.value.match(
+                        /[^a-zA-Z\d]/g)) {
+                document.getElementById("pwd1").innerHTML = "";
+            }
+
+            else {
+                document.getElementById("pwd1").innerHTML = "**At least 1 uppercase character | lowercase character | digit | special character";
+                passCtrl.focus();
+                return false;
+            }
+    }
+
+    function ValidateEmail() {
+
+        var validRegex = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)$/;
+        var em = document.getElementById("email");
+        if (em.value == "") {
+            document.getElementById("em1").innerHTML = "e-mail id is mandatory"
+            em.focus();
+            return false;
+        }
+
+        else if (em.value.match(validRegex)) {
+
+            document.getElementById("em1").innerHTML = "";
+
+        }
+        else {
+            document.getElementById("em1").innerHTML = "invalid e-mail address";
+            em.focus();
+            return false;
+        }
+
+    }
+
+
+    function validatePhoneNumber() {
+        var re = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+        var phnum = document.getElementById("phone");
+        if (phnum.value == "") {
+            document.getElementById("phoneError").innerHTML = "**enter phone number";
+            phnum.focus();
+            return false;
+        }
+        else if (phnum.value.match(re)) {
+            document.getElementById("phoneError").innerHTML = "";
+        }
+        else {
+            document.getElementById("phoneError").innerHTML = "**enter valid phone number";
+            phnum.focus();
+            return false;
+        }
+
+    }
+
+    function validateConfirmPassword() {
+        var conf = document.getElementById("confirm");
+        if (conf.value == passCtrl.value && conf.value != "") {
+            document.getElementById("confError").innerHTML = "";
+        }
+        else if (conf.value == "") {
+            document.getElementById("confError").innerHTML = "**Re-enter the password";
+            conf.focus();
+            return false;
+
+        }
+        else {
+            document.getElementById("confError").innerHTML = "**password does not match";
+            conf.focus();
+            return false;
+        }
+    }
+
+    function validateCheckbox() {
+        var check = document.getElementById("terms").value;
+        if (check.checked == false) {
+
+            alert("cannot enter");
+
+            return false;
+
+        }
+        else {
+            document.getElementById("checkError").innerHTML = "";
+        }
+    }
+
+    function validateDate() {
+        pickedDate = Date.parse(document.getElementById("date").value);
+        todaysDate = new Date();
+        todaysDate.setHours(0, 0, 0, 0);
+
+
+        if (pickedDate > todaysDate) {
+            document.getElementById("date1").innerHTML = "invalid date of birth";
+            return false;
+        } else {
+            document.getElementById("date1").innerHTML = "";
+        }
+    }
+
+
+</script>
+<body>
+    <center>
+        <span style="background-color:red;">
+            <h1><b>Sign Up</b></h1> </span>
+
+            <h4>please fill the below details</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <form class="form" asp-action="Index" onsubmit="return validateUserName() || ValidateEmail() || validatePassword() || validateDate() || validateConfirmPassword() " method="post">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <table>
+                            <tr>
+                                <div class="form-group">
+
+                                <td><b><label asp-for="UserName" class="control-label"></label></b></td>
+                                <td><input asp-for="UserName" class="form-control" placeholder="Enter User Name" id="userName" onabort="validateUserName()" /></td>
+
+                                <td><span id="userError1"></span></td>
+                </div>
+                </tr>
+                <tr>
+                    <div class="form-group">
+                    <td><b><label asp-for="Email" class="control-label"></label></b></td>
+                    <td> <input asp-for="Email" id="email" placeholder="Enter Email" onabort="ValidateEmail()" class="form-control" /></td>
+                    <td><span id="em1"></span></td>
+            </div>
+            </tr>
+            <tr>
+                <div class="form-group">
+                <td>
+                    <b><label asp-for="PhoneNumber" class="control-label"></label></b>
+                </td>
+                <td>
+                    <input asp-for="PhoneNumber" id="phone" placeholder="phone number" onabort="validatePhoneNumber()" class="form-control" />
+                </td>
+                <td>
+                    <span id="phoneError"></span>
+                </td>
+                </div>
+            </tr>
+            <tr>
+                <div class="form-group">
+                <td>
+                    <b>
+                        <label asp-for="Password" class="control-label"></label>
+                    </b>
+                </td>
+                <td> <input type="password" id="password" placeholder="Enter Password" onabort="validatePassword()" asp-for="Password" class="form-control" /></td>
+                <td><span id="pwd1"></span> </td>
+                </div>
+            </tr>
+            <tr>
+                <td><b><label for="psw-repeat">Confirm Password: </label></b></td>
+                <td><input type="password" id="confirm" placeholder="Confirm Password" onabort="validateConfirmPassword()" name="psw-repeat"></td>
+                <td><span id="confError"></span></td>
+            </tr>
+            <tr>
+                <div class="form-group">
+                <td><b><label asp-for="Dob" class="control-label"></label></b></td>
+                <td><input type="date" id="date" name="dob" onabort="validateDate()" asp-for="Dob" class="form-control" /></td>
+                <td><span id="date1"></span></td>
+                </div>
+            </tr>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" onsubmit="location.href = '@Url.Action( "Create","Home")'" value="Sign up" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                    <label>@ViewBag.Notification</label>
+
+                </td>
+            </tr>
+            </table>
+            </form>
+            </div>
+            </div>
+    </center>
+</body>
+
+
